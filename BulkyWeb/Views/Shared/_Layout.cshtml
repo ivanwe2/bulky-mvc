@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BulkyWeb.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
 <body>
     <header>
@@ -36,13 +37,14 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted bg-primary">
-        <div class="container">
-            Made by <a href="https://github.com/ivanwe2" class="link-underline-light link-opacity-25-hover">Ivan</a> with <i class="bi bi-fingerprint"></i>
+    <footer class="border-top footer text-muted bg-primary-subtle">
+        <div class="container text-dark">
+            Made by <a href="https://github.com/ivanwe2" class="link-underline-primary link-opacity-25-hover link-primary">Ivan</a> with <i class="bi bi-fingerprint"></i>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
