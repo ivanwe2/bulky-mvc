@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace BulkyWeb.Data.Extensions
+namespace Bulky.DataAccess.Data.Extensions
 {
     public static class DependencyInjection
     {
