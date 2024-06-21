@@ -9,7 +9,7 @@ namespace Bulky.DataAccess.Extensions
 {
     public static class DataServicesExtensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDbInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             var dbConnectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new ArgumentNullException(nameof(configuration));
