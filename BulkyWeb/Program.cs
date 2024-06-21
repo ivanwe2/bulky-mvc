@@ -11,7 +11,8 @@ namespace BulkyWeb
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddInfrastructure(builder.Configuration)
+                            .AddDataServices();
 
             var app = builder.Build();
 
