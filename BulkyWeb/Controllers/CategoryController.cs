@@ -1,19 +1,19 @@
-﻿using Bulky.DataAccess.Data;
-using Bulky.Models.Models;
+﻿using Bulky.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using Bulky.DataAccess.Repositories.Abstractions;
 
 namespace BulkyWeb.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        public CategoryController(ApplicationDbContext applicationDbContext)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _context = applicationDbContext;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            var categoryList = _context.Categories.ToList();
+            var categoryList = _unitOfWork.Category.GetAllBy();
             return View(categoryList);
         }
 
@@ -30,8 +30,8 @@ namespace BulkyWeb.Controllers
                 return View(category);
             }
 
-            _context.Categories.Add(category);
-            _context.SaveChanges();
+            _unitOfWork.Category.Add(category);
+            _unitOfWork.Save();
 
             TempData["success"] = "Category created successfully!";
 
@@ -43,7 +43,7 @@ namespace BulkyWeb.Controllers
             if (id is null)
                 return NotFound();
 
-            var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _unitOfWork.Category.GetBy(c => c.Id == id);
             if (category is null)
                 return NotFound();
 
@@ -55,8 +55,8 @@ namespace BulkyWeb.Controllers
         {
             if(ModelState.IsValid)
             {
-                _context.Categories.Update(category);
-                _context.SaveChanges();
+                _unitOfWork.Category.Update(category);
+                _unitOfWork.Save();
 
 				TempData["success"] = "Category edited successfully!";
 
@@ -70,7 +70,7 @@ namespace BulkyWeb.Controllers
 			if (id is null)
 				return NotFound();
 
-			var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+			var category = _unitOfWork.Category.GetBy(c => c.Id == id);
 			if (category is null)
 				return NotFound();
 
@@ -80,12 +80,12 @@ namespace BulkyWeb.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _unitOfWork.Category.GetBy(c => c.Id == id);
             if (category is null)
                 return NotFound();
 
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
+            _unitOfWork.Category.Delete(category);
+            _unitOfWork.Save();
 
 			TempData["success"] = "Category deleted successfully!";
 

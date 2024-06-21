@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Bulky.DataAccess.Data.Extensions;
+using Bulky.DataAccess.Extensions;
 
 namespace BulkyWeb
 {
@@ -11,7 +11,8 @@ namespace BulkyWeb
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddDbInfrastructure(builder.Configuration)
+                            .AddDataServices();
 
             var app = builder.Build();
 
