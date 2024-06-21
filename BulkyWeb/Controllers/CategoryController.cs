@@ -6,14 +6,14 @@ namespace BulkyWeb.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository _repository;
-        public CategoryController(ICategoryRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            var categoryList = _repository.GetAllBy();
+            var categoryList = _unitOfWork.Category.GetAllBy();
             return View(categoryList);
         }
 
@@ -30,8 +30,8 @@ namespace BulkyWeb.Controllers
                 return View(category);
             }
 
-            _repository.Add(category);
-            _repository.Save();
+            _unitOfWork.Category.Add(category);
+            _unitOfWork.Save();
 
             TempData["success"] = "Category created successfully!";
 
@@ -43,7 +43,7 @@ namespace BulkyWeb.Controllers
             if (id is null)
                 return NotFound();
 
-            var category = _repository.GetBy(c => c.Id == id);
+            var category = _unitOfWork.Category.GetBy(c => c.Id == id);
             if (category is null)
                 return NotFound();
 
@@ -55,8 +55,8 @@ namespace BulkyWeb.Controllers
         {
             if(ModelState.IsValid)
             {
-                _repository.Update(category);
-                _repository.Save();
+                _unitOfWork.Category.Update(category);
+                _unitOfWork.Save();
 
 				TempData["success"] = "Category edited successfully!";
 
@@ -70,7 +70,7 @@ namespace BulkyWeb.Controllers
 			if (id is null)
 				return NotFound();
 
-			var category = _repository.GetBy(c => c.Id == id);
+			var category = _unitOfWork.Category.GetBy(c => c.Id == id);
 			if (category is null)
 				return NotFound();
 
@@ -80,12 +80,12 @@ namespace BulkyWeb.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            var category = _repository.GetBy(c => c.Id == id);
+            var category = _unitOfWork.Category.GetBy(c => c.Id == id);
             if (category is null)
                 return NotFound();
 
-            _repository.Remove(category);
-            _repository.Save();
+            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Save();
 
 			TempData["success"] = "Category deleted successfully!";
 

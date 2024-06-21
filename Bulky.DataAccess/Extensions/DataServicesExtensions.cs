@@ -1,9 +1,9 @@
 ﻿using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repositories;
-using Bulky.DataAccess.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Bulky.DataAccess.Repositories.Abstractions;
 
 namespace Bulky.DataAccess.Extensions
 {
@@ -23,7 +23,7 @@ namespace Bulky.DataAccess.Extensions
 
         public static IServiceCollection AddDataServices(this IServiceCollection services)
         {
-            return services.AddScoped<ICategoryRepository, CategoryRepository>();
+            return services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }
