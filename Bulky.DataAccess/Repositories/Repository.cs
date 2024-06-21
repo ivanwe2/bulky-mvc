@@ -37,9 +37,9 @@ namespace Bulky.DataAccess.Repositories
 		public IEnumerable<T> GetAllBy(Expression<Func<T, bool>>? filter = null)
 		{
 			if(filter is null)
-				return _dbSet.AsNoTracking();
+				return _dbSet.AsNoTracking().ToList();
 
-			return _dbSet.AsNoTracking().Where(filter);
+			return _dbSet.AsNoTracking().Where(filter).ToList();
 		}
 
 		public T GetBy(Expression<Func<T, bool>> filter)
