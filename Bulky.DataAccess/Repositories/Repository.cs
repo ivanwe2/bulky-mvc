@@ -34,7 +34,7 @@ namespace Bulky.DataAccess.Repositories
 			_dbSet.RemoveRange(range);
 		}
 
-		public IEnumerable<T> GetAllBy(Expression<Func<T, bool>> filter)
+		public IEnumerable<T> GetAllBy(Expression<Func<T, bool>>? filter = null)
 		{
 			if(filter is null)
 				return _dbSet.AsNoTracking();

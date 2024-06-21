@@ -84,7 +84,7 @@ namespace BulkyWeb.Controllers
             if (category is null)
                 return NotFound();
 
-            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Category.Delete(category);
             _unitOfWork.Save();
 
 			TempData["success"] = "Category deleted successfully!";
