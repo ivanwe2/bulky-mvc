@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Bulky.DataAccess.Repositories.Abstractions;
 
-namespace BulkyWeb.Controllers
+namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -53,29 +54,29 @@ namespace BulkyWeb.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Update(category);
                 _unitOfWork.Save();
 
-				TempData["success"] = "Category edited successfully!";
+                TempData["success"] = "Category edited successfully!";
 
-				return RedirectToAction("Index");
+                return RedirectToAction("Index");
             }
             return View();
         }
 
-		public IActionResult Delete(int? id)
-		{
-			if (id is null)
-				return NotFound();
+        public IActionResult Delete(int? id)
+        {
+            if (id is null)
+                return NotFound();
 
-			var category = _unitOfWork.Category.GetBy(c => c.Id == id);
-			if (category is null)
-				return NotFound();
+            var category = _unitOfWork.Category.GetBy(c => c.Id == id);
+            if (category is null)
+                return NotFound();
 
-			return View(category);
-		}
+            return View(category);
+        }
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
@@ -87,10 +88,10 @@ namespace BulkyWeb.Controllers
             _unitOfWork.Category.Delete(category);
             _unitOfWork.Save();
 
-			TempData["success"] = "Category deleted successfully!";
+            TempData["success"] = "Category deleted successfully!";
 
-			return RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
-					
-	}
+
+    }
 }
