@@ -102,7 +102,7 @@ namespace Bulky.DataAccess.Data
                     Price = 23,
                     Price50 = 22,
                     Price100 = 20,
-					CategoryId = 7,
+					CategoryId = 3,
 					ImageUrl = ""
 				});
         }
