@@ -19,7 +19,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 		}
 		public IActionResult Index()
         {
-            var ProductList = _unitOfWork.Product.GetAllBy();
+            var ProductList = _unitOfWork.Product.GetAllBy(null, "Category");
             return View(ProductList);
         }
 
@@ -66,6 +66,17 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 
                 string productPath = Path.Combine(wwwRootPath, @"images\product");
 
+                if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                {
+                    string oldImagePath =
+                        Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+						System.IO.File.Delete(oldImagePath);
+                    }
+
+                }
                 using (var fileStream = new FileStream(Path.Combine(productPath,fileName), FileMode.Create))
                 {
                     file.CopyTo(fileStream);
@@ -74,37 +85,18 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 productVM.Product.ImageUrl = Constants.ProductImagesPath + fileName;
             }
 
-            _unitOfWork.Product.Add(productVM.Product);
+            if (productVM.Product.Id == 0)
+            {
+                _unitOfWork.Product.Add(productVM.Product);
+            }
+            else
+            {
+                _unitOfWork.Product.Update(productVM.Product);
+            }
+
             _unitOfWork.Save();
 
             SuccessNotification("Product created");
-
-            return RedirectToAction("Index");
-        }
-
-        public IActionResult Delete(int? id)
-        {
-            if (id is null)
-                return NotFound();
-
-            var product = _unitOfWork.Product.GetBy(c => c.Id == id);
-            if (product is null)
-                return NotFound();
-
-            return View(product);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePost(int? id)
-        {
-            var product = _unitOfWork.Product.GetBy(c => c.Id == id);
-            if (product is null)
-                return NotFound();
-
-            _unitOfWork.Product.Delete(product);
-            _unitOfWork.Save();
-
-            SuccessNotification("Product deleted");
 
             return RedirectToAction("Index");
         }
@@ -118,5 +110,40 @@ namespace BulkyWeb.Areas.Admin.Controllers
 		{
 			TempData["error"] = message;
 		}
-	}
+
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Product> products = _unitOfWork.Product.GetAllBy(null, "Category").ToList();
+
+            return Json(new {data =  products});
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var productToDelete = _unitOfWork.Product.GetBy(p=>p.Id == id);
+            if (productToDelete is null)
+            {
+                return Json(new { success = false, message = "Error while deleting!" });
+            }
+
+            var oldImagePath = 
+                Path.Combine(_webHostEnvironment.WebRootPath,
+                    productToDelete.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Product.Delete(productToDelete);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Delete successfull!" });
+        }
+        #endregion
+    }
 }
