@@ -8,5 +8,6 @@ namespace Bulky.Utility
 {
 	public static class Constants
 	{
+		public static readonly string ProductImagesPath = @"\images\product\";
 	}
 }
