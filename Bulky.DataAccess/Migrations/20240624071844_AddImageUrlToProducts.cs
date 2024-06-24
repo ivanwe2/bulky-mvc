@@ -57,7 +57,7 @@ namespace Bulky.DataAccess.Migrations
                 keyColumn: "Id",
                 keyValue: 6,
                 columns: new[] { "CategoryId", "ImageUrl" },
-                values: new object[] { 7, "" });
+                values: new object[] { 3, "" });
         }
 
         /// <inheritdoc />
