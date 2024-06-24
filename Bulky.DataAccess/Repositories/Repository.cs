@@ -34,17 +34,37 @@ namespace Bulky.DataAccess.Repositories
 			_dbSet.RemoveRange(range);
 		}
 
-		public IEnumerable<T> GetAllBy(Expression<Func<T, bool>>? filter = null)
+		public IEnumerable<T> GetAllBy(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
 		{
-			if(filter is null)
-				return _dbSet.AsNoTracking().ToList();
+			IQueryable<T> query = _dbSet.AsNoTracking();
+			if (!string.IsNullOrEmpty(includeProperties))
+			{
+				foreach (var property in includeProperties
+					.Split(',', StringSplitOptions.RemoveEmptyEntries))
+				{
+					query = query.Include(property);
+				}
+			}
 
-			return _dbSet.AsNoTracking().Where(filter).ToList();
+			if(filter is null)
+				return query.ToList();
+
+			return query.Where(filter).ToList();
 		}
 
-		public T GetBy(Expression<Func<T, bool>> filter)
+		public T GetBy(Expression<Func<T, bool>> filter, string? includeProperties = null)
 		{
-			return _dbSet.AsNoTracking().FirstOrDefault(filter) ?? throw new ArgumentException($"{typeof(T)} entity not found!");
+			IQueryable<T> query = _dbSet.AsNoTracking();
+			if (!string.IsNullOrEmpty(includeProperties))
+			{
+				foreach (var property in includeProperties
+					.Split(',', StringSplitOptions.RemoveEmptyEntries))
+				{
+					query = query.Include(property);
+				}
+			}
+
+			return query.FirstOrDefault(filter) ?? throw new ArgumentException($"{typeof(T)} entity not found!");
 		}
 	}
 }
