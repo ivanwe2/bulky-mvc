@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Bulky.DataAccess.Extensions;
+using Bulky.DataAccess.Data;
+using Microsoft.AspNetCore.Identity;
+using Bulky.Utility.Extensions;
 
 namespace BulkyWeb
 {
@@ -12,7 +15,11 @@ namespace BulkyWeb
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbInfrastructure(builder.Configuration)
-                            .AddDataServices();
+                            .AddDataServices()
+                            .AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>()
+                            .AddDefaultTokenProviders();
+            builder.Services.AddUtilityServices();
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
@@ -31,7 +38,10 @@ namespace BulkyWeb
 
             app.UpdateDatabase();
 
+            app.UseAuthentication();    
             app.UseAuthorization();
+
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
