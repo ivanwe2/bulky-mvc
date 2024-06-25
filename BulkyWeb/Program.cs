@@ -15,7 +15,6 @@ namespace BulkyWeb
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbInfrastructure(builder.Configuration)
-                            .AddDataServices()
                             .AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>()
                             .AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(options =>
@@ -25,7 +24,8 @@ namespace BulkyWeb
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
-            builder.Services.AddUtilityServices();
+            builder.Services.AddUtilityServices()
+                            .AddDataServices();
             builder.Services.AddRazorPages();
 
 
