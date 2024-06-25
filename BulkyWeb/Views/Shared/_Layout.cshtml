@@ -29,7 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class ="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Orders</a>
                         </li>
                         @if (User.IsInRole(RoleConstants.Admin))
@@ -44,28 +44,19 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
-                                    </li>                               
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a></li>
                                 </ul>
                             </li>
                         }
-                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(SessionConstants.SessionCart) != null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                    <i class="bi bi-minecart-loaded"></i>
-                                    &nbsp; (@(HttpContextAccessor.HttpContext.Session.GetInt32(SessionConstants.SessionCart)))
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-minecart"></i>
-                                    </a>
-                            </li>
-                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                                @await Component.InvokeAsync("ShoppingCart")
+                            </a>
+                        </li>
+                        
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
