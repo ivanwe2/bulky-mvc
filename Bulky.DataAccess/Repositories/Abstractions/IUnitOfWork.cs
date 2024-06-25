@@ -8,8 +8,9 @@ namespace Bulky.DataAccess.Repositories.Abstractions
 {
     public interface IUnitOfWork
     {
-        public ICategoryRepository Category { get; }
-        public IProductRepository Product { get; }
+        ICategoryRepository Category { get; }
+        IProductRepository Product { get; }
+        ICompanyRepository Company { get; }
         void Save();
     }
 }

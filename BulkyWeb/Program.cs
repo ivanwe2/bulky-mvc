@@ -18,8 +18,16 @@ namespace BulkyWeb
                             .AddDataServices()
                             .AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>()
                             .AddDefaultTokenProviders();
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
             builder.Services.AddUtilityServices();
             builder.Services.AddRazorPages();
+
 
             var app = builder.Build();
 
