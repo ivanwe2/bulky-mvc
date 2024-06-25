@@ -62,6 +62,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                     _unitOfWork.OrderHeader.UpdateStatus(id, OrderStatus.Approved, PaymentStatus.Approved);
                     _unitOfWork.Save();
                 }
+                HttpContext.Session.Clear();
             }
 
             var shoppingCarts = _unitOfWork.ShoppingCart
