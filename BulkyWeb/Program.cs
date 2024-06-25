@@ -31,6 +31,15 @@ namespace BulkyWeb
             builder.Services.AddUtilityServices()
                             .AddDataServices()
                             .ConfigurePaymentSettings(builder.Configuration);
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             builder.Services.AddRazorPages();
 
 
@@ -53,6 +62,8 @@ namespace BulkyWeb
 
             app.UseAuthentication();    
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapRazorPages();
 

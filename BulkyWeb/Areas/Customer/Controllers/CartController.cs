@@ -3,6 +3,7 @@ using Bulky.Models.Identity;
 using Bulky.Models.Models;
 using Bulky.Models.ViewModels;
 using Bulky.Utility.OrderUtils;
+using Bulky.Utility.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
@@ -204,10 +205,13 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult Minus(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCart.GetBy(c => c.Id == cartId);
+            var cartFromDb = _unitOfWork.ShoppingCart.GetBy(c => c.Id == cartId, null, true);
 
             if (cartFromDb.Count <= 1)
             {
+                HttpContext.Session.SetInt32(SessionConstants.SessionCart,
+                   _unitOfWork.ShoppingCart.GetAllBy(s => s.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
+
                 _unitOfWork.ShoppingCart.Delete(cartFromDb);
             }
             else 
@@ -223,7 +227,10 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult Delete(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCart.GetBy(c => c.Id == cartId);
+            var cartFromDb = _unitOfWork.ShoppingCart.GetBy(c => c.Id == cartId, null, true);
+
+            HttpContext.Session.SetInt32(SessionConstants.SessionCart,
+                   _unitOfWork.ShoppingCart.GetAllBy(s => s.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
 
             _unitOfWork.ShoppingCart.Delete(cartFromDb);
             _unitOfWork.Save();
