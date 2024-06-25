@@ -1,5 +1,7 @@
 ﻿using Bulky.Utility.IdentityUtils;
+using Bulky.Utility.Payment;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,5 +17,10 @@ namespace Bulky.Utility.Extensions
         {
             return services.AddScoped<IEmailSender, EmailSender>();
         }
+
+        public static IServiceCollection ConfigurePaymentSettings(this IServiceCollection services, IConfiguration configuration)
+            => services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+
+        
     }
 }
