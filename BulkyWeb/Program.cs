@@ -3,6 +3,8 @@ using Bulky.DataAccess.Extensions;
 using Bulky.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Bulky.Utility.Extensions;
+using Bulky.Utility.Payment;
+using Stripe;
 
 namespace BulkyWeb
 {
@@ -11,6 +13,8 @@ namespace BulkyWeb
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -25,7 +29,8 @@ namespace BulkyWeb
             });
 
             builder.Services.AddUtilityServices()
-                            .AddDataServices();
+                            .AddDataServices()
+                            .ConfigurePaymentSettings(builder.Configuration);
             builder.Services.AddRazorPages();
 
 
