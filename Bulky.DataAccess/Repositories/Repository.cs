@@ -37,34 +37,39 @@ namespace Bulky.DataAccess.Repositories
 		public IEnumerable<T> GetAllBy(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
 		{
 			IQueryable<T> query = _dbSet.AsNoTracking();
-			if (!string.IsNullOrEmpty(includeProperties))
-			{
-				foreach (var property in includeProperties
-					.Split(',', StringSplitOptions.RemoveEmptyEntries))
-				{
-					query = query.Include(property);
-				}
-			}
 
-			if(filter is null)
+            IncludePropertiesInQuery(ref query, includeProperties);
+
+            if (filter is null)
 				return query.ToList();
 
 			return query.Where(filter).ToList();
 		}
 
-		public T GetBy(Expression<Func<T, bool>> filter, string? includeProperties = null)
+		public T GetBy(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
 		{
-			IQueryable<T> query = _dbSet.AsNoTracking();
-			if (!string.IsNullOrEmpty(includeProperties))
-			{
-				foreach (var property in includeProperties
-					.Split(',', StringSplitOptions.RemoveEmptyEntries))
-				{
-					query = query.Include(property);
-				}
-			}
+			IQueryable<T> query;
 
-			return query.FirstOrDefault(filter) ?? throw new ArgumentException($"{typeof(T)} entity not found!");
+			if (tracked)
+				query = _dbSet;
+			else
+				query = _dbSet.AsNoTracking();
+
+			IncludePropertiesInQuery(ref query, includeProperties);
+
+			return query.FirstOrDefault(filter)!;
 		}
+
+		private void IncludePropertiesInQuery(ref IQueryable<T> query, string? includeProperties)
+		{
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
+            }
+        }
 	}
 }
