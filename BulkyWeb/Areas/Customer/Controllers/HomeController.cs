@@ -23,13 +23,13 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var products = _unitOfWork.Product.GetAllBy(null, "Category").ToList();
+            var products = _unitOfWork.Product.GetAllBy(null, "Category,ProductImages").ToList();
             return View(products);
         }
 
         public IActionResult Details(int productId)
         {
-            var product = _unitOfWork.Product.GetBy(p=>p.Id == productId, "Category");
+            var product = _unitOfWork.Product.GetBy(p=>p.Id == productId, "Category,ProductImages");
             var shoppingCart = new ShoppingCart()
             {
                 Product = product,
