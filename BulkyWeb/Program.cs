@@ -58,12 +58,12 @@ namespace BulkyWeb
 
             app.UseRouting();
 
-            app.UpdateDatabase();
-
             app.UseAuthentication();    
             app.UseAuthorization();
 
             app.UseSession();
+
+            app.InitializeDatabase();
 
             app.MapRazorPages();
 
