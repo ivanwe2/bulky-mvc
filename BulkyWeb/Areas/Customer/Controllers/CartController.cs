@@ -153,10 +153,11 @@ namespace BulkyWeb.Areas.Customer.Controllers
 			if (IsCustomerAccount(applicationUser))
             {
                 //stripe payment
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
                 var options = new SessionCreateOptions
                 {
-                    SuccessUrl =  $"http://localhost:5140/customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
-                    CancelUrl = "http://localhost:5140/customer/cart/index",
+                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                    CancelUrl = domain + "customer/cart/index",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment"
                 };
