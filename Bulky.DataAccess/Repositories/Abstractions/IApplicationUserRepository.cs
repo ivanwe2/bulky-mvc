@@ -9,5 +9,6 @@ namespace Bulky.DataAccess.Repositories.Abstractions
 {
     public interface IApplicationUserRepository : IRepository<ApplicationUser>
     { 
+        void Update(ApplicationUser applicationUser);
     }
 }
