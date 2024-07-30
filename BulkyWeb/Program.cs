@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Bulky.Utility.Extensions;
 using Bulky.Utility.Payment;
 using Stripe;
+using Microsoft.AspNetCore.Authentication;
 
 namespace BulkyWeb
 {
@@ -31,6 +32,12 @@ namespace BulkyWeb
             builder.Services.AddUtilityServices()
                             .AddDataServices()
                             .ConfigurePaymentSettings(builder.Configuration);
+
+            builder.Services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = builder.Configuration["MicrosoftAuth:ClientId"]!;
+                microsoftOptions.ClientSecret = builder.Configuration["MicrosoftAuth:ClientSecret"]!;
+            }); ;
 
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
